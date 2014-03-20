@@ -9,7 +9,8 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Stan Bondi"]
   spec.email         = ["stan@fixate.it"]
   spec.summary       = %q{Use builder classes to build up data which JS can use.}
-  spec.homepage      = ""
+  spec.description   = %q{Use builder classes to build up data which JS can use.}
+  spec.homepage      = "https://github.com/fixate/client-data"
   spec.license       = "None"
 
   spec.files         = Dir['lib/**/*', '[A-Z]*'] - ['Gemfile.lock']
