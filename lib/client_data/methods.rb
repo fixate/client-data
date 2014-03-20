@@ -11,16 +11,14 @@ module ClientData
 
     module ClassMethods
       def client_data(*configs)
-        self.__cs_builders ||= {}
-        self.__cs_builders[self.name] ||= []
-        self.__cs_builders[self.name].concat(configs)
+        self.__cs_builders ||= []
+        self.__cs_builders.concat(configs).uniq!
       end
     end
 
     module InstanceMethods
       def client_data_filter
-        configs = get_config_keys(params[:controller])
-        configs.each do |key|
+        config_keys.each do |key|
           begin
             klass = "#{builder_namespace}#{key.to_s.capitalize}Builder"
             klass = klass.constantize
@@ -51,10 +49,15 @@ module ClientData
         @provider ||= Adapters.factory(self)
       end
 
-      private
-
-      def get_config_keys(controller)
-        self.class.__cs_builders.try(:[], "#{controller.capitalize}Controller") || []
+      def config_keys
+        @keys ||= begin
+          keys = []
+          klass = self.class
+          loop do
+            keys += klass.__cs_builders || [] if klass.respond_to?(:__cs_builders)
+            break keys unless klass.respond_to?(:superclass) && klass = klass.superclass
+          end
+        end
       end
     end
   end

@@ -54,7 +54,7 @@ describe ClientData do
 			DoubleController.client_data :bar
 
 			expect(DoubleController.__cs_builders).to eq(
-				{ "DoubleController" => [:dummy, :foo, :other_foo, :bar] }
+				[:dummy, :foo, :other_foo, :bar]
 			)
 		end
 
@@ -69,4 +69,25 @@ describe ClientData do
 			subject.do_callbacks
 		end
 	end
+
+  context 'Inherited controller' do
+    before(:each) do
+      class BaseController
+        include ClientData::Methods
+
+        client_data :dummy
+      end
+      class InheritedController < BaseController
+        client_data :foo
+      end
+    end
+
+    subject { InheritedController.new }
+
+    it 'runs builders of parent class' do
+      expect(subject.send(:config_keys).sort).to eq(
+        [:dummy, :foo]
+      )
+    end
+  end
 end
