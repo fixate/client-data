@@ -9,7 +9,7 @@ module Rails
         end
 
         ::ClientData.configure do |c|
-          c.builder_root = "#{app.root}/app/js_builders"
+          c.builder_root = "#{app.root}/app/client_data"
         end
       end
 
