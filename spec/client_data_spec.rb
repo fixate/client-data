@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 class DoubleController
-	def self.before_filter(callback = nil, &block)
+	def self.before_render(callback = nil, &block)
 		@@before_callback = callback
 		@@before_callback = block if block_given?
 	end
@@ -38,7 +38,7 @@ describe ClientData do
 
 	context '#Methods' do
 		it 'calls the correct class methods when included' do
-			expect(DoubleController).to receive(:before_filter)
+			expect(DoubleController).to receive(:before_render)
 				.with(:client_data_filter)
 
 			expect(DoubleController).to receive(:extend)
