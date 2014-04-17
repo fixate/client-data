@@ -13,10 +13,10 @@ module ClientData
 
     module ClassMethods
       def client_data(*build_keys)
-        opts = build_keys.extract_options!
+        options = build_keys.extract_options!
         self.__cs_builders ||= {}
         build_keys.each do |key|
-          self.__cs_builders[key] = opts
+          self.__cs_builders[key] = options
         end
       end
     end
@@ -24,8 +24,9 @@ module ClientData
     def builders
       @builders ||= begin
         builders_hash = {}
-        builder_options_hash.keys.each do |key|
-          builders_hash[key] = create_builder(key)
+        builder_options_hash.each do |key, options|
+          name = options[:as].nil? ? key : options[:as]
+          builders_hash[name] = create_builder(key)
         end
         builders_hash
       end
@@ -34,8 +35,10 @@ module ClientData
     protected
 
     def client_data_builder_filter
-      builders.each do |key, builder|
-        provider.set(key, builder.build) if should_build_for?(key)
+      builder_options_hash.each do |key, options|
+        name = options[:as].nil? ? key : options[:as]
+        builder = builders[name]
+        provider.set(name.to_s, builder.build) if should_build_for?(key)
       end
     end
 
@@ -55,8 +58,11 @@ module ClientData
 
     def create_builder(key)
       begin
-        klass = "#{builder_namespace}#{key.to_s.capitalize}Builder"
-        klass = klass.constantize
+        klass = key
+        if klass.is_a?(Symbol) || klass.is_a?(String)
+          klass = "#{builder_namespace}#{key.to_s.camelize}Builder"
+          klass = klass.constantize
+        end
       rescue ::NameError => e
         raise ClientData::Error, "Unable to find constant #{klass}, " \
           "has ClientData.load_resources! been called? " \
