@@ -1,5 +1,5 @@
 module Dummy
-	class FooBuilder
+	class FooBuilder < ClientData::Builder
 		class << self; attr_accessor :return; end
 
 		def build

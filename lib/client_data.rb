@@ -1,6 +1,7 @@
 require 'active_support/core_ext/hash'
 
 require 'client_data/configuration'
+require 'client_data/before_render'
 require 'client_data/methods'
 require 'client_data/builder'
 require 'client_data/adapters'
