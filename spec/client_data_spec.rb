@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 class DoubleController
+  attr_accessor :action_name
+
+  def initialize(*args)
+    @action_name = 'dummy'
+  end
+
 	def self.before_render(callback = nil, &block)
 		@@before_callback = callback
 		@@before_callback = block if block_given?
@@ -32,14 +38,12 @@ describe ClientData do
 		end
 	}
 
-	subject {
-		DoubleController.new
-	}
+	subject { DoubleController.new }
 
 	context '#Methods' do
 		it 'calls the correct class methods when included' do
 			expect(DoubleController).to receive(:before_render)
-				.with(:client_data_filter)
+				.with(:client_data_builder_filter)
 
 			expect(DoubleController).to receive(:extend)
 				.with(described_class::Methods::ClassMethods)
@@ -80,7 +84,6 @@ describe ClientData do
     before(:each) do
       class BaseController
         include ClientData::Methods
-
         client_data :dummy
       end
       class InheritedController < BaseController
