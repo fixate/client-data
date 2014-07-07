@@ -42,8 +42,21 @@ module ClientData
       end
     end
 
+    def condition_satisfied?(options)
+      if cond = options[:if]
+        if cond.respond_to?(:call)
+          cond.call(self)
+        else
+          cond
+        end
+      else
+        true
+      end
+    end
+
     def should_build_for?(key)
       options = builder_options_hash[key] || {}
+      return false unless condition_satisfied?(options)
       action = self.action_name.to_sym
       only = options[:only]
       if only.nil?

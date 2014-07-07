@@ -58,6 +58,12 @@ describe ClientData do
 			)
 		end
 
+    it 'conditionally builds' do
+      DoubleController.client_data :dummy, if: -> { false }
+
+      expect(subject.provider).to_not receive(:set)
+    end
+
 		it 'calls the builder classes when callbacks are fired' do
 			Dummy::FooBuilder.return = { foo: 'bar' }
 			Dummy::TestBuilder.return = { bar: 'baz', foo: 1 }

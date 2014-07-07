@@ -1,6 +1,7 @@
 $:.unshift(File.join(File.dirname(__FILE__), "../lib"))
 $:.unshift(File.dirname(__FILE__))
 
+require 'active_support/all'
 require 'client_data'
 
 require 'support/client_data'
