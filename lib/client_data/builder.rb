@@ -12,7 +12,7 @@ module ClientData
       end
     end
 
-    def self.property
+    def self.property(prop)
       define_method(m) do
         if controller.respond_to?(m)
           controller.send(m)
