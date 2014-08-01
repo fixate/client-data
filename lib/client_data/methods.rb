@@ -1,7 +1,6 @@
 module ClientData
   module Methods
     extend ActiveSupport::Concern
-    @__client_data_lock = Mutex.new
 
     included do
       send(:include, ClientData::BeforeRender) unless respond_to?(:before_render)
@@ -14,12 +13,10 @@ module ClientData
 
     module ClassMethods
       def client_data(*build_keys)
-        @__client_data_lock.synchronize do
-          options = build_keys.extract_options!
-          self.__cs_builders ||= {}
-          build_keys.each do |key|
-            self.__cs_builders[key] = options
-          end
+        options = build_keys.extract_options!
+        self.__cs_builders ||= {}
+        build_keys.each do |key|
+          self.__cs_builders[key] = options
         end
       end
     end
