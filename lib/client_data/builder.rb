@@ -8,16 +8,16 @@ module ClientData
 
     def self.properties(*props)
       props.each do |m|
-        property m
+        property(m)
       end
     end
 
     def self.property(prop)
-      define_method(m) do
-        if controller.respond_to?(m)
-          controller.send(m)
+      define_method(prop) do
+        if controller.respond_to?(prop)
+          controller.send(prop)
         else
-          controller.instance_variable_get(:"@#{m}")
+          controller.instance_variable_get(:"@#{prop}")
         end
       end
     end
