@@ -105,7 +105,7 @@ module ClientData
         klass = self.class
         loop do
           keys.merge!(klass.__cs_builders || {}) if klass.respond_to?(:__cs_builders)
-          break keys unless klass.respond_to?(:superclass) && klass = klass.superclass
+          break keys.deep_dup unless klass.respond_to?(:superclass) && klass = klass.superclass
         end
       end
     end
