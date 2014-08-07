@@ -16,7 +16,7 @@ module ClientData
 
     def self.property(prop)
       define_method(prop) do
-        if controller.respond_to?(prop)
+        if controller.respond_to?(prop, true)
           controller.send(prop)
         else
           controller.instance_variable_get(:"@#{prop}")
