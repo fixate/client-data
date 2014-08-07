@@ -1,9 +1,11 @@
 module ClientData
   class Builder
     attr_accessor :controller
+    attr_reader :options
 
-    def initialize(controller = nil)
+    def initialize(controller = nil, options = {})
       @controller = controller
+      @options = options
     end
 
     def self.properties(*props)
@@ -20,6 +22,10 @@ module ClientData
           controller.instance_variable_get(:"@#{prop}")
         end
       end
+    end
+
+    def self.builder_name
+      self.name.split('::').last.chomp('Builder').underscore
     end
   end
 end

@@ -21,6 +21,11 @@ module ClientData
       end
     end
 
+    def client_data_options(builder_name, options)
+      builder_options_hash[builder_name.to_sym] ||= {}
+      builder_options_hash[builder_name.to_sym].merge!(options)
+    end
+
     def builders
       @builders ||= begin
         builders_hash = {}
@@ -82,7 +87,8 @@ module ClientData
           "Error: #{e.message}"
       end
 
-      klass.new.tap { |o| o.controller = self }
+      options = builder_options_hash[klass.builder_name.to_sym].dup || {}
+      klass.new(self, options).tap { |o| o.controller = self }
     end
 
     def builder_namespace
